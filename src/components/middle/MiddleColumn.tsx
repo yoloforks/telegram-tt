@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useState, memo, useMemo,
+  useEffect, useState, memo, useMemo, useRef,
 } from '../../lib/teact/teact';
 import { requestMeasure, requestMutation } from '../../lib/fasterdom/fasterdom';
 import { getActions, withGlobal } from '../../global';
@@ -62,7 +62,7 @@ import buildClassName from '../../util/buildClassName';
 import buildStyle from '../../util/buildStyle';
 
 import useLastCallback from '../../hooks/useLastCallback';
-import useCustomBackground from '../../hooks/useCustomBackground';
+// import useCustomBackground from '../../hooks/useCustomBackground';
 import useWindowSize from '../../hooks/useWindowSize';
 import usePrevDuringAnimation from '../../hooks/usePrevDuringAnimation';
 import useLang from '../../hooks/useLang';
@@ -92,6 +92,7 @@ import ChatLanguageModal from './ChatLanguageModal.async';
 import './MiddleColumn.scss';
 
 import styles from './MiddleColumn.module.scss';
+import { twallpaper } from '../../lib/twallpaper';
 
 interface OwnProps {
   leftColumnRef: React.RefObject<HTMLDivElement>;
@@ -119,7 +120,7 @@ type StateProps = {
   patternColor?: string;
   isLeftColumnShown?: boolean;
   isRightColumnShown?: boolean;
-  isBackgroundBlurred?: boolean;
+  // isBackgroundBlurred?: boolean;
   leftColumnWidth?: number;
   hasCurrentTextSearch?: boolean;
   isSelectModeActive?: boolean;
@@ -173,7 +174,7 @@ function MiddleColumn({
   patternColor,
   isLeftColumnShown,
   isRightColumnShown,
-  isBackgroundBlurred,
+  // isBackgroundBlurred,
   leftColumnWidth,
   hasCurrentTextSearch,
   isSelectModeActive,
@@ -214,7 +215,7 @@ function MiddleColumn({
     resetLeftColumnWidth,
   } = getActions();
 
-  const { width: windowWidth } = useWindowSize();
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
   const { isTablet, isDesktop } = useAppLayout();
 
   const lang = useLang();
@@ -397,7 +398,7 @@ function MiddleColumn({
     restartBot({ chatId: chatId! });
   });
 
-  const customBackgroundValue = useCustomBackground(theme, customBackground);
+  // const customBackgroundValue = useCustomBackground(theme, customBackground);
 
   const className = buildClassName(
     renderingHasTools && 'has-header-tools',
@@ -405,11 +406,11 @@ function MiddleColumn({
   );
 
   const bgClassName = buildClassName(
-    styles.background,
+    // styles.background,
     styles.withTransition,
-    customBackground && styles.customBgImage,
-    backgroundColor && styles.customBgColor,
-    customBackground && isBackgroundBlurred && styles.blurred,
+    // customBackground && styles.customBgImage,
+    // backgroundColor && styles.customBgColor,
+    // customBackground && isBackgroundBlurred && styles.blurred,
     isRightColumnShown && styles.withRightColumn,
   );
 
@@ -461,6 +462,43 @@ function MiddleColumn({
   );
   const withExtraShift = Boolean(isMessagingDisabled || isSelectModeActive || isPinnedMessageList);
 
+  // eslint-disable-next-line no-null/no-null
+  const gradientCanvasRef = useRef<HTMLCanvasElement>(null);
+  // eslint-disable-next-line no-null/no-null
+  const patternCanvasRef = useRef<HTMLCanvasElement>(null);
+  // eslint-disable-next-line no-null/no-null
+  const twallpaperRef = useRef<any>(null);
+
+  useEffect(() => {
+    if (!gradientCanvasRef.current || !patternCanvasRef.current) return;
+
+    gradientCanvasRef.current.height = windowHeight;
+    gradientCanvasRef.current.width = windowWidth;
+
+    patternCanvasRef.current.height = windowHeight;
+    patternCanvasRef.current.width = windowWidth;
+
+    twallpaperRef.current = twallpaper(gradientCanvasRef.current, patternCanvasRef.current);
+    // eslint-disable-next-line react-hooks-static-deps/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!twallpaperRef.current) return;
+    twallpaperRef.current.toggleMask(theme);
+  }, [theme]);
+
+  useEffect(() => {
+    if (!gradientCanvasRef.current || !patternCanvasRef.current) return;
+    gradientCanvasRef.current.height = windowHeight;
+    gradientCanvasRef.current.width = windowWidth;
+
+    patternCanvasRef.current.height = windowHeight;
+    patternCanvasRef.current.width = windowWidth;
+
+    twallpaperRef.current.renderMaskCanvas();
+    twallpaperRef.current.renderGradientCanvas();
+  }, [windowWidth, windowHeight]);
+
   return (
     <div
       id="MiddleColumn"
@@ -474,7 +512,7 @@ function MiddleColumn({
         `--composer-translate-x: ${composerTranslateX}px`,
         `--toolbar-translate-x: ${toolbarTranslateX}px`,
         `--pattern-color: ${patternColor}`,
-        backgroundColor && `--theme-background-color: ${backgroundColor}`,
+        // backgroundColor && `--theme-background-color: ${backgroundColor}`,
       )}
       onClick={(isTablet && isLeftColumnShown) ? handleTabletFocus : undefined}
     >
@@ -486,10 +524,10 @@ function MiddleColumn({
           onDoubleClick={resetResize}
         />
       )}
-      <div
-        className={bgClassName}
-        style={customBackgroundValue ? `--custom-background: ${customBackgroundValue}` : undefined}
-      />
+      <div className={bgClassName}>
+        <canvas className={styles.canvas} ref={gradientCanvasRef} />
+        <canvas className={buildClassName(styles.canvas, theme === 'light' && styles.mixed)} ref={patternCanvasRef} />
+      </div>
       <div id="middle-column-portals" />
       {Boolean(renderingChatId && renderingThreadId) && (
         <>
@@ -662,7 +700,7 @@ export default memo(withGlobal<OwnProps>(
   (global, { isMobile }): StateProps => {
     const theme = selectTheme(global);
     const {
-      isBlurred: isBackgroundBlurred, background: customBackground, backgroundColor, patternColor,
+      /* isBlurred: isBackgroundBlurred, */ background: customBackground, backgroundColor, patternColor,
     } = global.settings.themes[theme] || {};
 
     const {
@@ -680,7 +718,7 @@ export default memo(withGlobal<OwnProps>(
       patternColor,
       isLeftColumnShown,
       isRightColumnShown: selectIsRightColumnShown(global, isMobile),
-      isBackgroundBlurred,
+      // isBackgroundBlurred,
       hasCurrentTextSearch: Boolean(selectCurrentTextSearch(global)),
       isSelectModeActive: selectIsInSelectMode(global),
       isSeenByModalOpen: Boolean(seenByModal),

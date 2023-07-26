@@ -861,6 +861,9 @@ const Composer: FC<OwnProps & StateProps> = ({
     // Wait until message animation starts
     requestMeasure(() => {
       resetComposer();
+      // TODO: remove this
+      // @ts-ignore
+      window.sendMessage();
     });
   });
 

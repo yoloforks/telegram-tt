@@ -88,3 +88,13 @@
     }
   }
 }
+
+.canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.mixed {
+  mix-blend-mode: soft-light;
+}

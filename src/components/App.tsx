@@ -1,5 +1,5 @@
 import type { FC } from '../lib/teact/teact';
-import React, { useEffect, useLayoutEffect } from '../lib/teact/teact';
+import React, { useEffect/* , useLayoutEffect */ } from '../lib/teact/teact';
 import { getActions, withGlobal } from '../global';
 
 import type { GlobalState } from '../global/types';
@@ -8,7 +8,7 @@ import type { ThemeKey } from '../types';
 
 import { IS_INSTALL_PROMPT_SUPPORTED, IS_MULTITAB_SUPPORTED, PLATFORM_ENV } from '../util/windowEnvironment';
 import {
-  DARK_THEME_BG_COLOR, INACTIVE_MARKER, LIGHT_THEME_BG_COLOR, PAGE_TITLE,
+  /* DARK_THEME_BG_COLOR, */ INACTIVE_MARKER, /* LIGHT_THEME_BG_COLOR, */ PAGE_TITLE,
 } from '../config';
 import { selectTabState, selectTheme } from '../global/selectors';
 import { updateSizes } from '../util/windowSize';
@@ -30,7 +30,7 @@ import Transition from './ui/Transition';
 import UiLoader from './common/UiLoader';
 // import Test from './test/TestSvg';
 
-import styles from './App.module.scss';
+// import styles from './App.module.scss';
 
 type StateProps = {
   authState: GlobalState['authState'];
@@ -57,7 +57,7 @@ const App: FC<StateProps> = ({
   hasPasscode,
   isInactiveAuth,
   hasWebAuthTokenFailed,
-  theme,
+  // theme,
 }) => {
   const { disconnect } = getActions();
 
@@ -196,16 +196,16 @@ const App: FC<StateProps> = ({
     }
   }
 
-  useLayoutEffect(() => {
-    document.body.classList.add(styles.bg);
-  }, []);
+  // useLayoutEffect(() => {
+  //   document.body.classList.add(styles.bg);
+  // }, []);
 
-  useLayoutEffect(() => {
-    document.body.style.setProperty(
-      '--theme-background-color',
-      theme === 'dark' ? DARK_THEME_BG_COLOR : LIGHT_THEME_BG_COLOR,
-    );
-  }, [theme]);
+  // useLayoutEffect(() => {
+  //   document.body.style.setProperty(
+  //     '--theme-background-color',
+  //     theme === 'dark' ? DARK_THEME_BG_COLOR : LIGHT_THEME_BG_COLOR,
+  //   );
+  // }, [theme]);
 
   return (
     <UiLoader page={page} isMobile={isMobile}>
