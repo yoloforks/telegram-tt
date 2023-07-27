@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useState, memo, useMemo,
+  useEffect, useState, memo, useMemo, useRef,
 } from '../../lib/teact/teact';
 import { requestMeasure, requestMutation } from '../../lib/fasterdom/fasterdom';
 import { getActions, withGlobal } from '../../global';
@@ -62,7 +62,7 @@ import buildClassName from '../../util/buildClassName';
 import buildStyle from '../../util/buildStyle';
 
 import useLastCallback from '../../hooks/useLastCallback';
-import useCustomBackground from '../../hooks/useCustomBackground';
+// import useCustomBackground from '../../hooks/useCustomBackground';
 import useWindowSize from '../../hooks/useWindowSize';
 import usePrevDuringAnimation from '../../hooks/usePrevDuringAnimation';
 import useLang from '../../hooks/useLang';
@@ -90,8 +90,12 @@ import GiftPremiumModal from '../main/premium/GiftPremiumModal.async';
 import ChatLanguageModal from './ChatLanguageModal.async';
 
 import './MiddleColumn.scss';
+import '../../lib/twallpaper/twallpaper.scss';
 
+import animals from '../../assets/patterns/animals.svg';
 import styles from './MiddleColumn.module.scss';
+import { TWallpaper } from '../../lib/twallpaper';
+// import { TWallpaper } from '../../lib/twallpaper/twallpaper';
 
 interface OwnProps {
   leftColumnRef: React.RefObject<HTMLDivElement>;
@@ -119,7 +123,7 @@ type StateProps = {
   patternColor?: string;
   isLeftColumnShown?: boolean;
   isRightColumnShown?: boolean;
-  isBackgroundBlurred?: boolean;
+  // isBackgroundBlurred?: boolean;
   leftColumnWidth?: number;
   hasCurrentTextSearch?: boolean;
   isSelectModeActive?: boolean;
@@ -173,7 +177,7 @@ function MiddleColumn({
   patternColor,
   isLeftColumnShown,
   isRightColumnShown,
-  isBackgroundBlurred,
+  // isBackgroundBlurred,
   leftColumnWidth,
   hasCurrentTextSearch,
   isSelectModeActive,
@@ -397,7 +401,7 @@ function MiddleColumn({
     restartBot({ chatId: chatId! });
   });
 
-  const customBackgroundValue = useCustomBackground(theme, customBackground);
+  // const customBackgroundValue = useCustomBackground(theme, customBackground);
 
   const className = buildClassName(
     renderingHasTools && 'has-header-tools',
@@ -405,11 +409,11 @@ function MiddleColumn({
   );
 
   const bgClassName = buildClassName(
-    styles.background,
+    // styles.background,
     styles.withTransition,
-    customBackground && styles.customBgImage,
-    backgroundColor && styles.customBgColor,
-    customBackground && isBackgroundBlurred && styles.blurred,
+    // customBackground && styles.customBgImage,
+    // backgroundColor && styles.customBgColor,
+    // customBackground && isBackgroundBlurred && styles.blurred,
     isRightColumnShown && styles.withRightColumn,
   );
 
@@ -461,6 +465,48 @@ function MiddleColumn({
   );
   const withExtraShift = Boolean(isMessagingDisabled || isSelectModeActive || isPinnedMessageList);
 
+  // eslint-disable-next-line no-null/no-null
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  // eslint-disable-next-line no-null/no-null
+  const twallpaperRef = useRef<TWallpaper>(null);
+
+  useEffect(() => {
+    if (!bgRef.current) return;
+
+    const wallpaper = new TWallpaper(bgRef.current);
+    wallpaper.init({
+      fps: 60,
+      tails: 90,
+      colors: [
+        '#dbddbb',
+        '#6ba587',
+        '#d5d88d',
+        '#88b884',
+      ],
+      pattern: {
+        imageUrl: animals,
+        backgroundColor: '#000',
+        blur: 0,
+        size: 420,
+        opacity: 0.5,
+        isMask: false,
+      },
+    });
+
+    // @ts-ignore
+    window.wallpaper = wallpaper;
+    twallpaperRef.current = wallpaper;
+  }, []);
+
+  useEffect(() => {
+    if (!twallpaperRef.current) return;
+
+    twallpaperRef.current.updatePattern({
+      isMask: theme === 'dark',
+    });
+  }, [theme]);
+
   return (
     <div
       id="MiddleColumn"
@@ -474,7 +520,7 @@ function MiddleColumn({
         `--composer-translate-x: ${composerTranslateX}px`,
         `--toolbar-translate-x: ${toolbarTranslateX}px`,
         `--pattern-color: ${patternColor}`,
-        backgroundColor && `--theme-background-color: ${backgroundColor}`,
+        // backgroundColor && `--theme-background-color: ${backgroundColor}`,
       )}
       onClick={(isTablet && isLeftColumnShown) ? handleTabletFocus : undefined}
     >
@@ -486,10 +532,7 @@ function MiddleColumn({
           onDoubleClick={resetResize}
         />
       )}
-      <div
-        className={bgClassName}
-        style={customBackgroundValue ? `--custom-background: ${customBackgroundValue}` : undefined}
-      />
+      <div className={bgClassName} ref={bgRef} />
       <div id="middle-column-portals" />
       {Boolean(renderingChatId && renderingThreadId) && (
         <>
@@ -662,7 +705,7 @@ export default memo(withGlobal<OwnProps>(
   (global, { isMobile }): StateProps => {
     const theme = selectTheme(global);
     const {
-      isBlurred: isBackgroundBlurred, background: customBackground, backgroundColor, patternColor,
+      /* isBlurred: isBackgroundBlurred, */background: customBackground, backgroundColor, patternColor,
     } = global.settings.themes[theme] || {};
 
     const {
@@ -680,7 +723,7 @@ export default memo(withGlobal<OwnProps>(
       patternColor,
       isLeftColumnShown,
       isRightColumnShown: selectIsRightColumnShown(global, isMobile),
-      isBackgroundBlurred,
+      // isBackgroundBlurred,
       hasCurrentTextSearch: Boolean(selectCurrentTextSearch(global)),
       isSelectModeActive: selectIsInSelectMode(global),
       isSeenByModalOpen: Boolean(seenByModal),

@@ -861,6 +861,8 @@ const Composer: FC<OwnProps & StateProps> = ({
     // Wait until message animation starts
     requestMeasure(() => {
       resetComposer();
+      // @ts-ignore
+      window.wallpaper.toNextPosition();
     });
   });
 

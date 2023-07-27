@@ -1,0 +1,49 @@
+.wallpaper-mask {
+  -webkit-mask: center repeat;
+  -webkit-mask-size: var(--wallpaper-size) auto;
+  -webkit-mask-image: var(--wallpaper-image);
+  opacity: var(--wallpaper-opacity);
+}
+
+.wallpaper-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--wallpaper-background);
+}
+
+.wallpaper-canvas.wallpaper-mask {
+  + {
+    .wallpaper-pattern {
+      background-image: none;
+      opacity: initial;
+      filter: none;
+    }
+  }
+}
+
+.wallpaper-canvas {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.wallpaper-pattern {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  mix-blend-mode: soft-light;
+  background: center repeat;
+  background-size: var(--wallpaper-size) auto;
+  background-image: var(--wallpaper-image);
+  filter: blur(var(--wallpaper-blur));
+  opacity: var(--wallpaper-opacity);
+}
