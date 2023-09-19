@@ -87,6 +87,9 @@ export default function createConfig(
         {
           directory: path.resolve(__dirname, 'src/lib/secret-sauce'),
         },
+        {
+          directory: path.resolve(__dirname, 'src/lib/twallpaper/patterns'),
+        },
       ],
       devMiddleware: {
         stats: 'minimal',

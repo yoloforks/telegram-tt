@@ -15,6 +15,7 @@
     "eslint-multitab-tt"
   ],
   "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
     "eslint-multitab-tt/no-immediate-global": "error",
     "eslint-multitab-tt/must-update-global-after-await": "off",
     "eslint-multitab-tt/set-global-only-variable": "error",
