@@ -17,14 +17,14 @@ const Wallpaper: FC<StateProps> = ({
 }) => {
   const wallpaperOptions = useRef<TwallpaperOptions>({
     colors: [
-      // '#dbddbb',
-      // '#6ba587',
-      // '#d5d88d',
-      // '#88b884',
-      '#fec496',
-      '#dd6cb9',
-      '#962fbf',
-      '#4f5bd5',
+      '#dbddbb',
+      '#6ba587',
+      '#d5d88d',
+      '#88b884',
+      // '#fec496',
+      // '#dd6cb9',
+      // '#962fbf',
+      // '#4f5bd5',
     ],
     mask: {
       enabled: true,
