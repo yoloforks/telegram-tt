@@ -271,7 +271,7 @@ export class Twallpaper {
 
     this.container.style.setProperty(
       '--wallpaper-image',
-      `url(${window.location.origin}/${this.options.mask.image}.svg)`,
+      `url(${window.location.origin}/patterns/${this.options.mask.image}.svg)`,
     );
 
     if (this.options.mask.enabled) {
