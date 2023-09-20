@@ -82,6 +82,7 @@ import Composer from '../common/Composer';
 import SeenByModal from '../common/SeenByModal.async';
 import UnpinAllMessagesModal from '../common/UnpinAllMessagesModal.async';
 import GiftPremiumModal from '../main/premium/GiftPremiumModal.async';
+import Wallpaper from '../main/Wallpaper';
 import Button from '../ui/Button';
 import Transition from '../ui/Transition';
 import ChatLanguageModal from './ChatLanguageModal.async';
@@ -491,6 +492,7 @@ function MiddleColumn({
           onDoubleClick={resetResize}
         />
       )}
+      {isMobile && <Wallpaper theme={theme} />}
       <div id="middle-column-portals" />
       {Boolean(renderingChatId && renderingThreadId) && (
         <>
