@@ -140,12 +140,12 @@ export class Twallpaper {
   init(options: TwallpaperOptions): void {
     this.setOptions(options);
     this.gradientContainer = document.createElement('canvas');
-    this.gradientContainer.classList.add('twallpaper-canvas');
+    this.gradientContainer.classList.add('wallpaper-canvas');
 
     this.maskContainer = document.createElement('div');
-    this.maskContainer.classList.add('twallpaper-pattern');
+    this.maskContainer.classList.add('wallpaper-pattern');
 
-    this.container.classList.add('twallpaper-wrap');
+    this.container.classList.add('wallpaper-wrap');
     this.container.append(this.gradientContainer, this.maskContainer);
 
     this.updateMask();
@@ -276,10 +276,10 @@ export class Twallpaper {
 
     if (this.options.mask.enabled) {
       this.container.style.setProperty('--wallpaper-opacity', '0.3');
-      this.gradientContainer.classList.add('twallpaper-mask');
+      this.gradientContainer.classList.add('wallpaper-mask');
     } else {
       this.container.style.setProperty('--wallpaper-opacity', '0.5');
-      this.gradientContainer.classList.remove('twallpaper-mask');
+      this.gradientContainer.classList.remove('wallpaper-mask');
     }
   }
 

@@ -28,8 +28,8 @@ import UiLoader from './common/UiLoader';
 import AppInactive from './main/AppInactive';
 import LockScreen from './main/LockScreen.async';
 import Main from './main/Main.async';
+import Wallpaper from './main/Wallpaper';
 import Transition from './ui/Transition';
-import Wallpaper from './Wallpaper';
 
 import styles from './App.module.scss';
 
@@ -197,16 +197,16 @@ const App: FC<StateProps> = ({
     }
   }
 
-  // useLayoutEffect(() => {
-  //   document.body.classList.add(styles.bg);
-  // }, []);
+  useLayoutEffect(() => {
+    document.body.classList.add(styles.bg);
+  }, []);
 
-  // useLayoutEffect(() => {
-  //   document.body.style.setProperty(
-  //     '--theme-background-color',
-  //     theme === 'dark' ? DARK_THEME_BG_COLOR : LIGHT_THEME_BG_COLOR,
-  //   );
-  // }, [theme]);
+  useLayoutEffect(() => {
+    document.body.style.setProperty(
+      '--theme-background-color',
+      theme === 'dark' ? DARK_THEME_BG_COLOR : LIGHT_THEME_BG_COLOR,
+    );
+  }, [theme]);
 
   return (
     <UiLoader page={page} isMobile={isMobile}>

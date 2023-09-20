@@ -1,11 +1,11 @@
-.twallpaper-mask {
+.wallpaper-mask {
   -webkit-mask: center repeat;
   -webkit-mask-size: var(--wallpaper-size) auto;
   -webkit-mask-image: var(--wallpaper-image);
   opacity: var(--wallpaper-opacity);
 }
 
-.twallpaper-wrap {
+.wallpaper-wrap {
   position: absolute;
   left: 0;
   top: 0;
@@ -16,9 +16,9 @@
   background: var(--wallpaper-background);
 }
 
-.twallpaper-canvas.twallpaper-mask {
+.wallpaper-canvas.wallpaper-mask {
   + {
-    .twallpaper-pattern {
+    .wallpaper-pattern {
       background-image: none;
       opacity: initial;
       filter: none;
@@ -26,7 +26,7 @@
   }
 }
 
-.twallpaper-canvas {
+.wallpaper-canvas {
   top: 0;
   left: 0;
   width: 100%;
@@ -34,7 +34,7 @@
   position: absolute;
 }
 
-.twallpaper-pattern {
+.wallpaper-pattern {
   position: absolute;
   left: 0;
   top: 0;

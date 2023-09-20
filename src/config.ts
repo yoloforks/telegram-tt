@@ -296,7 +296,7 @@ export const GENERAL_TOPIC_ID = 1;
 export const STORY_EXPIRE_PERIOD = 86400; // 1 day
 export const STORY_VIEWERS_EXPIRE_PERIOD = 86400; // 1 day
 
-export const LIGHT_THEME_BG_COLOR = '#99BA92';
+export const LIGHT_THEME_BG_COLOR = '#F0F0F0';
 export const DARK_THEME_BG_COLOR = '#0F0F0F';
 export const DEFAULT_PATTERN_COLOR = '#4A8E3A8C';
 export const DARK_THEME_PATTERN_COLOR = '#0A0A0A8C';

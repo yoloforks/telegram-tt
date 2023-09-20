@@ -1,14 +1,12 @@
-import React from '../lib/teact/teact';
-import { type FC, useEffect, useRef } from '../lib/teact/teact';
-import { withGlobal } from '../global';
+import React from '../../lib/teact/teact';
+import { type FC, useEffect, useRef } from '../../lib/teact/teact';
 
-import type { TwallpaperOptions } from '../lib/twallpaper';
-import type { ThemeKey } from '../types';
+import type { TwallpaperOptions } from '../../lib/twallpaper';
+import type { ThemeKey } from '../../types';
 
-import { Twallpaper } from '../lib/twallpaper';
-import { selectTheme } from '../global/selectors/ui';
+import { Twallpaper } from '../../lib/twallpaper';
 
-import '../lib/twallpaper/twallpaper.scss';
+import './Wallpaper.scss';
 
 type StateProps = {
   theme: ThemeKey;
@@ -19,6 +17,10 @@ const Wallpaper: FC<StateProps> = ({
 }) => {
   const wallpaperOptions = useRef<TwallpaperOptions>({
     colors: [
+      // '#dbddbb',
+      // '#6ba587',
+      // '#d5d88d',
+      // '#88b884',
       '#fec496',
       '#dd6cb9',
       '#962fbf',
@@ -43,16 +45,9 @@ const Wallpaper: FC<StateProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!twallpaperRef.current) return;
-
-    if (theme === 'dark') {
-      wallpaperOptions.current.mask.enabled = true;
-    } else {
-      wallpaperOptions.current.mask.enabled = false;
-    }
-
-    twallpaperRef.current.setOptions(wallpaperOptions.current);
-    twallpaperRef.current.updateMask();
+    wallpaperOptions.current.mask.enabled = theme === 'dark';
+    twallpaperRef.current!.setOptions(wallpaperOptions.current);
+    twallpaperRef.current!.updateMask();
   }, [theme]);
 
   return <div ref={twallpaperContainerRef} />;
