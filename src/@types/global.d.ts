@@ -63,6 +63,7 @@ declare module '*.png';
 declare module '*.svg';
 declare module '*.tgs';
 declare module '*.wasm';
+declare module '*.glsl';
 
 declare module '*.txt' {
   const content: string;

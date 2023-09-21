@@ -154,7 +154,7 @@ export default function createConfig(
           type: 'asset/resource',
         },
         {
-          test: /\.(txt|tl)$/i,
+          test: /\.(txt|tl|glsl)$/i,
           type: 'asset/source',
         },
       ],

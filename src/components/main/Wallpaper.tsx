@@ -39,7 +39,6 @@ const Wallpaper: FC<StateProps> = ({
   const twallpaperContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!twallpaperContainerRef.current) return;
     twallpaperRef.current = new Twallpaper(twallpaperContainerRef.current!);
     twallpaperRef.current.init(wallpaperOptions.current);
   }, []);

@@ -4,12 +4,12 @@ export function loadShaders(
 ): readonly [WebGLShader, WebGLShader] {
   const [vertexShader, fragmentShader] = shaderSources;
   return [
-    loadShader(gl, vertexShader, gl.VERTEX_SHADER),
-    loadShader(gl, fragmentShader, gl.FRAGMENT_SHADER),
+    createShader(gl, vertexShader, gl.VERTEX_SHADER),
+    createShader(gl, fragmentShader, gl.FRAGMENT_SHADER),
   ] as const;
 }
 
-function loadShader(
+function createShader(
   gl: WebGLRenderingContext,
   shaderSource: string,
   shaderType: number,

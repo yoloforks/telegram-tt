@@ -1,70 +1,9 @@
 import type { Vec3 } from './utils';
 
+import FRAGMENT_SHADER from './fragment-shader.glsl';
+import { KEY_POINTS } from './key-points';
 import { distance, hexToVec3, loadShaders } from './utils';
-
-const FRAGMENT_SHADER = `
-precision highp float;
-
-uniform vec2 resolution;
-
-uniform vec3 color1;
-uniform vec3 color2;
-uniform vec3 color3;
-uniform vec3 color4;
-
-uniform vec2 color1Pos;
-uniform vec2 color2Pos;
-uniform vec2 color3Pos;
-uniform vec2 color4Pos;
-
-void main() {
-  vec2 position = gl_FragCoord.xy / resolution.xy;
-  position.y = 1.0 - position.y;
-
-  float dp1 = distance(position, color1Pos);
-  float dp2 = distance(position, color2Pos);
-  float dp3 = distance(position, color3Pos);
-  float dp4 = distance(position, color4Pos);
-  float minD = min(dp1, min(dp2, min(dp3, dp4)));
-  float p = 3.0;
-
-  dp1 = pow(1.0 - (dp1 - minD), p);
-  dp2 = pow(1.0 - (dp2 - minD), p);
-  dp3 = pow(1.0 - (dp3 - minD), p);
-  dp4 = pow(1.0 - (dp4 - minD), p);
-  float dpt = abs(dp1 + dp2 + dp3 + dp4);
-
-  gl_FragColor =
-    (vec4(color1 / 255.0, 1.0) * dp1 / dpt) +
-    (vec4(color2 / 255.0, 1.0) * dp2 / dpt) +
-    (vec4(color3 / 255.0, 1.0) * dp3 / dpt) +
-    (vec4(color4 / 255.0, 1.0) * dp4 / dpt);
-}
-`;
-
-const VERTEX_SHADER = `
-// an attribute will receive data from a buffer
-attribute vec4 a_position;
-
-// all shaders have a main function
-void main() {
-
-  // gl_Position is a special variable a vertex shader
-  // is responsible for setting
-  gl_Position = a_position;
-}
-`;
-
-const KEY_POINTS = [
-  [0.265, 0.582], // 0
-  [0.176, 0.918], // 1
-  [1 - 0.585, 1 - 0.164], // 0
-  [0.644, 0.755], // 1
-  [1 - 0.265, 1 - 0.582], // 0
-  [1 - 0.176, 1 - 0.918], // 1
-  [0.585, 0.164], // 0
-  [1 - 0.644, 1 - 0.755], // 1
-];
+import VERTEX_SHADER from './vertex-shader.glsl';
 
 export interface TwallpaperOptions {
   colors: string[];
@@ -127,7 +66,7 @@ export class Twallpaper {
   private animating = false;
 
   constructor(private readonly container: HTMLElement) {
-    this.animate = this.animate.bind(this);
+    this.render = this.render.bind(this);
   }
 
   setOptions(options: TwallpaperOptions): void {
@@ -139,6 +78,7 @@ export class Twallpaper {
 
   init(options: TwallpaperOptions): void {
     this.setOptions(options);
+
     this.gradientContainer = document.createElement('canvas');
     this.gradientContainer.classList.add('wallpaper-canvas');
 
@@ -283,15 +223,7 @@ export class Twallpaper {
     }
   }
 
-  updateColors() {
-    this.targetColor1Pos = KEY_POINTS[this.keyShift % 8];
-    this.targetColor2Pos = KEY_POINTS[(this.keyShift + 2) % 8];
-    this.targetColor3Pos = KEY_POINTS[(this.keyShift + 4) % 8];
-    this.targetColor4Pos = KEY_POINTS[(this.keyShift + 6) % 8];
-    this.keyShift = (this.keyShift + 1) % 8;
-  }
-
-  renderGradient() {
+  renderGradient(): void {
     this.gl.uniform2fv(this.resolutionLoc, [
       this.gl.canvas.width,
       this.gl.canvas.height,
@@ -313,6 +245,21 @@ export class Twallpaper {
   }
 
   animate(): void {
+    this.updateColors();
+    if (!this.animating) {
+      requestAnimationFrame(this.render);
+    }
+  }
+
+  private updateColors(): void {
+    this.targetColor1Pos = KEY_POINTS[this.keyShift % 8];
+    this.targetColor2Pos = KEY_POINTS[(this.keyShift + 2) % 8];
+    this.targetColor3Pos = KEY_POINTS[(this.keyShift + 4) % 8];
+    this.targetColor4Pos = KEY_POINTS[(this.keyShift + 6) % 8];
+    this.keyShift = (this.keyShift + 1) % 8;
+  }
+
+  private render(): void {
     this.animating = true;
 
     if (
@@ -330,7 +277,7 @@ export class Twallpaper {
       this.color4Pos[0] = this.color4Pos[0] * (1 - this.speed) + this.targetColor4Pos[0] * this.speed;
       this.color4Pos[1] = this.color4Pos[1] * (1 - this.speed) + this.targetColor4Pos[1] * this.speed;
       this.renderGradient();
-      requestAnimationFrame(this.animate);
+      requestAnimationFrame(this.render);
     } else {
       this.animating = false;
     }
